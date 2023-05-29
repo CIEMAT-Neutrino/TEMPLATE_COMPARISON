@@ -66,8 +66,11 @@ def import_templates(template_path,these_types=[],pretrigger=100,sampling=4e-9,c
                 
                 # Roll template peak to pretrigger length
                 if np.argmax(this_wvf) != pretrigger:
-                    this_wvf = np.roll(this_wvf,pretrigger-np.argmax(this_wvf))
-
+                    if np.argmax(this_wvf) > pretrigger:
+                        this_wvf = np.roll(this_wvf,pretrigger-np.argmax(this_wvf))
+                    else:
+                        this_wvf = np.concatenate((np.zeros(pretrigger-np.argmax(this_wvf)),this_wvf[:-pretrigger+np.argmax(this_wvf)]),axis=0)
+                        
                 area = np.sum(this_wvf[this_wvf > 0])
                 print('Loaded template %s OV %i int %f'%(model_folder,ov,area))
                 
