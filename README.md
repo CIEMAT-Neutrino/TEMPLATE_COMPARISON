@@ -9,6 +9,9 @@ pip install -r requirements.txt
 ```bash
 juptyer notebook template_comparison.ipynb
 ```
+## Output example
+![Example](example.png)
+
 ## TODO
 * Add more types of wvfs:
     * Include all SPE templates.
