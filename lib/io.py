@@ -3,7 +3,7 @@ import uproot
 import numpy as np
 from .wvf import convert_sampling_rate, apply_smoothing
 
-def import_templates(template_path,pretrigger=100,sampling=1/4e-9,convert_sampling=False,new_sampling=1/16e-9,wvf_length=None,same_length=True,debug=False):
+def import_templates(template_path,these_types=[],pretrigger=100,sampling=1/4e-9,convert_sampling=False,new_sampling=1/16e-9,wvf_length=None,same_length=True,debug=False):
     '''
     .git/CIEMAT/templates/
     template_path: path to the templates folder
@@ -24,10 +24,14 @@ def import_templates(template_path,pretrigger=100,sampling=1/4e-9,convert_sampli
     # Load templates' model folder
     for model_folder in templates_model:
         if debug: print("Loading model: {}".format(model_folder))
-        templates_type = os.listdir(template_path+model_folder+"/")
+        
+        if these_types != []:
+            types = these_types
+        else:
+            types = os.listdir(template_path+model_folder+"/")
         
         # Load templates' type folder
-        for type_folder in templates_type:
+        for type_folder in types:
             templates = os.listdir(template_path+model_folder+"/"+type_folder+"/")
             
             # Load templates
