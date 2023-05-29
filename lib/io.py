@@ -1,7 +1,9 @@
 import os
 import uproot
 import numpy as np
+import plotly.express as px
 from .wvf import convert_sampling_rate, apply_smoothing
+from itertools import product
 
 def import_templates(template_path,these_types=[],pretrigger=100,sampling=4e-9,convert_sampling=False,new_sampling=16e-9,wvf_length=None,same_length=True,debug=False):
     '''
@@ -70,7 +72,7 @@ def import_templates(template_path,these_types=[],pretrigger=100,sampling=4e-9,c
                         this_wvf = np.roll(this_wvf,pretrigger-np.argmax(this_wvf))
                     else:
                         this_wvf = np.concatenate((np.zeros(pretrigger-np.argmax(this_wvf)),this_wvf[:-pretrigger+np.argmax(this_wvf)]),axis=0)
-                        
+
                 area = np.sum(this_wvf[this_wvf > 0])
                 print('Loaded template %s OV %i int %f'%(model_folder,ov,area))
                 
@@ -130,3 +132,39 @@ def resize_wvf(short_wvf,max_length,wvf_length,same_length,debug=False):
         max_length = len(this_wvf)
     
     return this_wvf, max_length
+
+def generate_templates(df,sampling,new_sampling,main_folder,type_folder,models,ovs,max_length,save=True,debug=False):
+    templates = []
+    for ov,model in product(ovs,models):
+        laser = df[(df["OV"] == ov) & (df["MODEL"] == model) & (df["TYPE"] == "LASER")]["ADC"].values[0]
+        spe= df[(df["OV"] == ov) & (df["MODEL"] == model) & (df["TYPE"] == "SPE")]["ADC"].values[0]
+
+        template = np.asarray(laser)*np.max(spe)/np.max(laser)
+        if new_sampling != sampling:
+            template = convert_sampling_rate(template, 1/sampling, 1/new_sampling, debug=False)
+            sample = new_sampling
+        else:
+            sample = sampling
+
+        template = template[np.argmax(template)-10:]
+        templates.append({
+            "INST": df["INST"].values[0],
+            "NAME": "%s_SPE_CAEN_OV%i"%(model,ov),
+            "MODEL": model,
+            "TYPE": "TEMPLATE",
+            "OV": ov,
+            "SAMPING": sample,
+            "AMP": np.max(template),
+            "INT": np.sum(template[template > 0]),
+            "ADC": template[:max_length],
+            "TIME": sample*np.arange(max_length)
+        })
+
+        if  debug: px.line(x=sample*np.arange(max_length),y=template[:max_length]).show()
+        if save:
+            try:
+                np.savetxt("wvfs/%s/%s/%s/%s_SPE_CAEN_OV%i.txt"%(main_folder,model,type_folder,model,ov), template[:max_length])
+            except FileNotFoundError:
+                os.makedirs("wvfs/%s/%s/%s/"%(main_folder,model,type_folder))
+                np.savetxt("wvfs/%s/%s/%s/%s_SPE_CAEN_OV%i.txt"%(main_folder,model,type_folder,model,ov), template[:max_length])
+    return templates
