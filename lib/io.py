@@ -3,7 +3,7 @@ import uproot
 import numpy as np
 from .wvf import convert_sampling_rate, apply_smoothing
 
-def import_templates(template_path,these_types=[],pretrigger=100,sampling=1/4e-9,convert_sampling=False,new_sampling=1/16e-9,wvf_length=None,same_length=True,debug=False):
+def import_templates(template_path,these_types=[],pretrigger=100,sampling=4e-9,convert_sampling=False,new_sampling=16e-9,wvf_length=None,same_length=True,debug=False):
     '''
     .git/CIEMAT/templates/
     template_path: path to the templates folder
@@ -56,25 +56,32 @@ def import_templates(template_path,these_types=[],pretrigger=100,sampling=1/4e-9
 
                 # Convert sampling rate
                 if convert_sampling:
-                    short_wvf = convert_sampling_rate(short_wvf, sampling, new_sampling, debug=debug)
-                
+                    short_wvf = convert_sampling_rate(short_wvf, 1/sampling, 1/new_sampling, debug=debug)
+                    sample = new_sampling
+                else:
+                    sample = sampling
+
                 # Resize template
                 this_wvf, max_length = resize_wvf(short_wvf, max_length, wvf_length, same_length, debug=debug)
                 
                 # Roll template peak to pretrigger length
                 if np.argmax(this_wvf) != pretrigger:
                     this_wvf = np.roll(this_wvf,pretrigger-np.argmax(this_wvf))
-                    print('This template %s OV %i int %f'%(model_folder,ov,np.sum(this_wvf[this_wvf > 0])))
+
+                area = np.sum(this_wvf[this_wvf > 0])
+                print('Loaded template %s OV %i int %f'%(model_folder,ov,area))
                 
                 # Create template dictionary
                 template_dict = {"INST": "CIEMAT",
                                 "NAME": template,
                                 "MODEL": model_folder,
-                                "OV": ov,
-                                "AMP": np.max(this_wvf),
                                 "TYPE": wvf_type,
+                                "OV": ov,
+                                "SAMPING": sample,
+                                "AMP": np.max(this_wvf),
+                                "INT": area,
                                 "ADC":  this_wvf.tolist(),
-                                "TIME": 16e-9*np.arange(len(this_wvf))}
+                                "TIME": sample*np.arange(len(this_wvf))}
                 # Append template dictionary to list
                 template_dict_list.append(template_dict)
     
