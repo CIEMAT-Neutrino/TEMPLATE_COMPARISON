@@ -24,8 +24,6 @@ juptyer notebook template_comparison.ipynb
 [MIT](https://choosealicense.com/licenses/mit/)
 
 ## Authors (alphabetical order, please insert your name here if you contribute to this project)
-* [**Manthey Corchado, Sergio**](CIEMAT)
+* [**Manthey Corchado, Sergio**](https://github.com/mantheys)
 
 ## Acknowledgments
-
-
