@@ -11,14 +11,14 @@ juptyer notebook template_comparison.ipynb
 ```
 ## TODO
 * Add more types of wvfs:
-    - [] Include all SPE templates.
-* Add more types of comparison
-    - [] Add comparison of wvfs with different norm
-    - [] Add comparison of wvfs with different scale
-* Add more types of data
-    - [] Add data from binary files
-* Add more types of analysis
-    - [] Add analysis of wvfs' AMP, RMS, etc.
+    * Include all SPE templates.
+* Add more types of comparison:
+    * Add comparison of wvfs with different norm.
+    * Add comparison of wvfs with different scale.
+* Add more types of data:
+    * Add data from binary files.
+* Add more types of analysis:
+    * Add analysis of wvfs' AMP, RMS, etc.
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
