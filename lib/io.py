@@ -74,7 +74,7 @@ def import_templates(template_path,these_types=[],pretrigger=100,sampling=4e-9,c
                         this_wvf = np.concatenate((np.zeros(pretrigger-np.argmax(this_wvf)),this_wvf[:-pretrigger+np.argmax(this_wvf)]),axis=0)
 
                 area = np.sum(this_wvf[this_wvf > 0])
-                print('Loaded template %s OV %i int %f'%(model_folder,ov,area))
+                if debug: print('Loaded template %s OV %i int %f'%(model_folder,ov,area))
                 
                 # Create template dictionary
                 template_dict = {"INST": "CIEMAT",
@@ -89,7 +89,7 @@ def import_templates(template_path,these_types=[],pretrigger=100,sampling=4e-9,c
                                 "TIME": sample*np.arange(len(this_wvf))}
                 # Append template dictionary to list
                 template_dict_list.append(template_dict)
-    
+    print("Done!")
     return template_dict_list
 
 def read_file(template,debug=False):
