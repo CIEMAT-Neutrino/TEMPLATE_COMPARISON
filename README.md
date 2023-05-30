@@ -10,7 +10,7 @@ pip install -r requirements.txt
 juptyer notebook template_comparison.ipynb
 ```
 ## Output example
-![Example](example.png)
+![Example](newplot.png)
 
 ## TODO
 * Add more types of wvfs:
