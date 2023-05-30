@@ -5,7 +5,7 @@ import plotly.express as px
 from .wvf import convert_sampling_rate, apply_smoothing
 from itertools import product
 
-def import_templates(template_path,these_types=[],pretrigger=100,sampling=4e-9,convert_sampling=False,new_sampling=16e-9,wvf_length=None,same_length=True,debug=False):
+def import_templates(template_path,these_types=[],pretrigger=100,sampling=4e-9,convert_sampling=False,new_sampling=16e-9,wvf_length=0,same_length=True,debug=False):
     '''
     .git/CIEMAT/templates/
     template_path: path to the templates folder
@@ -113,17 +113,14 @@ def read_file(template,debug=False):
 
 def resize_wvf(short_wvf,max_length,wvf_length,same_length,debug=False):
     if same_length:
-        if wvf_length is not None:
+        if wvf_length > 0:
             if len(short_wvf) < wvf_length:
                 this_wvf = np.concatenate((short_wvf,np.zeros(wvf_length-len(short_wvf))))
-                max_length = wvf_length
             else:
                 this_wvf = short_wvf[:wvf_length]
-                max_length = len(this_wvf)
         else:
             if len(short_wvf) < max_length:
                 this_wvf = np.concatenate((short_wvf,np.zeros(max_length-len(short_wvf))))
-                max_length = len(this_wvf)
             else:
                 this_wvf = short_wvf
             max_length = len(this_wvf)
