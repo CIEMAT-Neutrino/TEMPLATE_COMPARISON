@@ -44,7 +44,7 @@ def import_templates(template_path,these_types=[],pretrigger=100,sampling=4e-9,c
                 elif type_folder == "SPE": wvf_type = "SPE"
                 elif type_folder == "NOISE": wvf_type = "NOISE"
                 elif type_folder == "TEMPLATE": wvf_type = "TEMPLATE"
-                else: wvf_type = "UNKNOWN"
+                else: wvf_type = type_folder
                 if debug: print("Loading type: {}".format(wvf_type))
 
                 if "OV1" in template: ov = 1
@@ -77,7 +77,7 @@ def import_templates(template_path,these_types=[],pretrigger=100,sampling=4e-9,c
                 if debug: print('Loaded template %s OV %i int %f'%(model_folder,ov,area))
                 
                 # Create template dictionary
-                template_dict = {"INST": "CIEMAT",
+                template_dict = {"INST": template_path.split("/")[-2],
                                 "NAME": template,
                                 "MODEL": model_folder,
                                 "TYPE": wvf_type,
