@@ -23,8 +23,8 @@ juptyer notebook template_comparison.ipynb
 * Add more types of wvfs:
   * ~~Include all SPE templates~~.
 * Add more types of comparison:
-  * Add comparison of wvfs with different norm.
-  * Add comparison of wvfs with different scale.
+  * ~~Add comparison of norm wvfs~~.
+  * Add comparison of wvfs with different shapes.
 * Add more types of data:
   * Add data from binary files.
 * Add more types of analysis:
