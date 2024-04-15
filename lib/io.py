@@ -104,9 +104,11 @@ def read_file(template,debug=False):
 
     elif template.endswith(".root"):
         root_file = uproot.open(template)
-        short_wvf = root_file[root_file.keys()[0]].to_numpy()[0]
+        try: short_wvf = root_file[root_file.keys()[0]].to_numpy()[0]
+        except AttributeError:
+            print("Maybe you have a TGraph you want to plot?\nThe deafult assumed is 'mean'.")
+            short_wvf = root_file["mean"].values()[1]
         return short_wvf
-
     else:
         if debug: print("Unknown template format: {}".format(template)) 
         return None
